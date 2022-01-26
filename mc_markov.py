@@ -13,7 +13,7 @@ def mcmc(nb, test, params, num_steps, step_size, starter_weights=None, filestem=
 	elif isinstance(starter_weights, str):
 		starter_weights = np.load(starter_weights)
 	weights = starter_weights
-	best_weights = starter_weights
+	best_weights = None 
 
 	# init scores, save file count, direction
 	prev = 0
@@ -42,7 +42,7 @@ def mcmc(nb, test, params, num_steps, step_size, starter_weights=None, filestem=
 		# update best
 		if score > best_score:
 			best_score = score
-			best_weights = weights
+			best_weights = np.copy(weights)
 
 	print(best_score)
 	print(best_weights)
