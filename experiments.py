@@ -52,7 +52,7 @@ def random_unit_vec(dim):
 	length = np.linalg.norm(vec)
 	return vec / length
 	
-def mcmc(nb, test, params, num_steps, step_size):
+def mcmc(nb, test, params, num_steps, step_size, filestem="montecarlo", save_every=10000):
 	best_score = 0
 	best_weights = None
 	n = len(params)
@@ -60,7 +60,11 @@ def mcmc(nb, test, params, num_steps, step_size):
 	direction = random_unit_vec(n)
 	prev = 0
 	score = nb.test(test, params, weights, report=False)
-	for i in tqdm(range(num_steps)):
+	count = 0
+	for i in range(num_steps):
+		if i and i % save_every == 0:
+			np.save(f'{filestem}{count}.npy', weights)
+			print(f'score at step {i}: {score}')
 		if score < prev:
 			weights -= (direction * step_size)
 			direction = random_unit_vec(n)
@@ -73,5 +77,3 @@ def mcmc(nb, test, params, num_steps, step_size):
 	print(best_score)
 	print(best_weights)
 	return best_score, best_weights
-		
-	
