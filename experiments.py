@@ -65,6 +65,7 @@ def mcmc(nb, test, params, num_steps, step_size, filestem="montecarlo", save_eve
 		if i and i % save_every == 0:
 			np.save(f'{filestem}{count}.npy', weights)
 			print(f'score at step {i}: {score}')
+			count += 1
 		if score < prev:
 			weights -= (direction * step_size)
 			direction = random_unit_vec(n)
