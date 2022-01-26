@@ -42,11 +42,14 @@ class NBClassifier:
 			) / (std * root2pi)
 		)
 	
-	def test(self, df, params, print_pred=False, report=True):
+	def test(self, df, params, weights=None, print_pred=False, report=True):
 		start = perf_counter()
 		df['p0'] = 0
 		df['p1'] = 0
-		for param in params:
+		if weights is None:
+			weights = [1] * len(params)
+
+		for param, w in zip(params, weights):
 			if param == 'gender':
 				# df['p0'] += np.log2(df['gender'].apply(
 				# 	lambda x : self.gender_counts[0][x] / self.label_counts[0]
@@ -55,8 +58,8 @@ class NBClassifier:
 				# 	lambda x : self.gender_counts[1][x] / self.label_counts[1]
 				# ))
 				
-				df['p0'] = np.log2(df['gender'].map(self.gender_llh[0]))
-				df['p1'] = np.log2(df['gender'].map(self.gender_llh[1]))
+				df['p0'] = w * np.log2(df['gender'].map(self.gender_llh[0]))
+				df['p1'] = w * np.log2(df['gender'].map(self.gender_llh[1]))
 
 
 			else:
@@ -65,8 +68,8 @@ class NBClassifier:
 				# df['p0'] += np.log2(df[param].apply(lambda x : gauss0.pdf(x)))
 				# df['p1'] += np.log2(df[param].apply(lambda x : gauss1.pdf(x)))
 
-				df['p0'] += np.log2(self.normpdf(df[param], self.mu[0][param], self.sigma[0][param]))
-				df['p1'] += np.log2(self.normpdf(df[param], self.mu[1][param], self.sigma[1][param]))
+				df['p0'] += w * np.log2(self.normpdf(df[param], self.mu[0][param], self.sigma[0][param]))
+				df['p1'] += w * np.log2(self.normpdf(df[param], self.mu[1][param], self.sigma[1][param]))
 
 		correct = 0
 		# for idx, row in df.iterrows():

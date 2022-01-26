@@ -1,3 +1,6 @@
+from tqdm import tqdm
+# age, gender, height_cm, weight_kg, body fat_%, diastolic, systolic, grip_force, sit_and_bend_forward_cm, sit_up_count, broad_jump_cm
+
 # experiment 1: try dropping single parameters
 def experiment1():
 	top_score = 0
@@ -41,3 +44,34 @@ def experiment2():
 
 # experiment2()
 # exp2 results: ['gender', 'weight_kg', 'diastolic', 'grip_force', 'sit_and_bend_forward_cm', 'sit_up_count']
+
+	
+# markov chain monte carlo
+def random_unit_vec(dim):
+	vec = np.random.rand(dim) - 0.5
+	length = np.linalg.norm(vec)
+	return vec / length
+	
+def mcmc(nb, test, params, num_steps, step_size):
+	best_score = 0
+	best_weights = None
+	n = len(params)
+	weights = np.ones(n)
+	direction = random_unit_vec(n)
+	prev = 0
+	score = nb.test(test, params, weights, report=False)
+	for i in tqdm(range(num_steps)):
+		if score < prev:
+			weights -= (direction * step_size)
+			direction = random_unit_vec(n)
+		prev = score
+		weights += (direction * step_size)
+		score = nb.test(test, params, weights, report=False)
+		if score > best_score:
+			best_score = score
+			best_weights = weights
+	print(best_score)
+	print(best_weights)
+	return best_score, best_weights
+		
+	
