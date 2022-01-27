@@ -103,6 +103,7 @@ all_params = [
 ]
 
 my_params = ['gender', 'weight_kg', 'diastolic', 'grip_force', 'sit_and_bend_forward_cm', 'sit_up_count']
+my_weights = np.array([-3.72967159,  5.92218948,  3.1171761 ,  6.59952667,  4.32016449, 2.76731788])
 
 if __name__ == "__main__":
 	# train_fname = 'train.txt'
@@ -122,9 +123,9 @@ if __name__ == "__main__":
 
 	# personal testing vs gradescope submission
 	if len(sys.argv) == 3:
-		nb.test(test_df, my_params, print_pred=True, report=False)
+		nb.test(test_df, my_params, my_weights, print_pred=True, report=False)
 	else:
-		nb.test(test_df, my_params, print_pred=False, report=True)
+		nb.test(test_df, my_params, my_weights, print_pred=False, report=True)
 
 	# top10 = test_df[:10]
 	# nb.test(top10, params, print_pred=True, report=False)
