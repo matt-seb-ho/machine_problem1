@@ -12,12 +12,8 @@ class NBClassifier:
 		self.mu = [None, None]
 		self.sigma = [None, None]
 
-		# gender likelihoods
-		# gender_llh[l][g] = P(gender=g | label=l) = #(g, l) / #(l)
-		self.gender_llh = [{}, {}]
-
-		# label_counts 
-		# self.label_counts = [None, None]
+        # discrete variable likelihoods, indexed on label
+		self.discrete_llh = [{}, {}]
 
 	def train(self, df, print_time=False):
 		# for each label, gather continuous distribution params and discrete variable counts
@@ -26,9 +22,11 @@ class NBClassifier:
 			subset = df[df['label'] == label]
 			self.mu[label] = subset.mean(numeric_only=True)
 			self.sigma[label] = subset.std(numeric_only=True)
-			self.gender_llh[label]['F'] = len(subset[subset['gender'] == 'F']) / len(subset)
-			self.gender_llh[label]['M'] = len(subset[subset['gender'] == 'M']) / len(subset)
-			# self.label_counts[label] = len(subset)
+
+			# MLE for discrete variables
+			for c in df.columns:
+				if df[c].dtypes == np.object:
+					self.discrete_llh[label][c] = subset[c].value_counts() / len(subset)
 			
 		stop = perf_counter()
 		if print_time:
@@ -49,35 +47,21 @@ class NBClassifier:
 			weights = [1] * len(params)
 
 		for param, w in zip(params, weights):
-			if param == 'gender':
-				# df['p0'] += np.log2(df['gender'].apply(
-				# 	lambda x : self.gender_counts[0][x] / self.label_counts[0]
-				# ))
-				# df['p1'] += np.log2(df['gender'].apply(
-				# 	lambda x : self.gender_counts[1][x] / self.label_counts[1]
-				# ))
-				
-				df['p0'] = w * np.log2(df['gender'].map(self.gender_llh[0]))
-				df['p1'] = w * np.log2(df['gender'].map(self.gender_llh[1]))
-
+			if df[param].dtypes == np.object:
+				# use MLE for discrete variables 
+				df['p0'] += w * np.log2(df[param].map(
+					lambda x : self.discrete_llh[0][param][x]
+				))
+				df['p1'] += w * np.log2(df[param].map(
+					lambda x : self.discrete_llh[1][param][x]
+				))
 
 			else:
-				# gauss0 = norm(self.mu[0][param], self.sigma[0][param])
-				# gauss1 = norm(self.mu[1][param], self.sigma[1][param])
-				# df['p0'] += np.log2(df[param].apply(lambda x : gauss0.pdf(x)))
-				# df['p1'] += np.log2(df[param].apply(lambda x : gauss1.pdf(x)))
-
+				# use Gaussian Distribution for continuous variables
 				df['p0'] += w * np.log2(self.normpdf(df[param], self.mu[0][param], self.sigma[0][param]))
 				df['p1'] += w * np.log2(self.normpdf(df[param], self.mu[1][param], self.sigma[1][param]))
 
 		correct = 0
-		# for idx, row in df.iterrows():
-		# 	guess = 0 if row['p0'] > row['p1'] else 1
-		# 	if guess == row['label']:
-		# 		correct += 1
-		# 		if print_pred:
-		# 			print(guess)
-		
 		pred = df['p1'] > df['p0'] 
 		if print_pred:
 			print(pred.astype('i1').to_string(index=False))
