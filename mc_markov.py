@@ -18,6 +18,7 @@ def mcmc(nb, test, params, num_steps, step_size, starter_weights=None, filestem=
 	# init scores, save file count, direction
 	prev = 0
 	score = nb.test(test, params, weights, report=False)
+	print('init score:', score)
 	best_score = score
 	fcount = 0
 	delta = random_unit_vec(n) * step_size
@@ -33,9 +34,10 @@ def mcmc(nb, test, params, num_steps, step_size, starter_weights=None, filestem=
 		if score < prev:
 			weights -= delta
 			delta = random_unit_vec(n) * step_size
+		else:
+			prev = score
 
 		# step and re-score
-		prev = score
 		weights += delta
 		score = nb.test(test, params, weights, report=False)
 
