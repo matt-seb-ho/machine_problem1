@@ -47,24 +47,23 @@ if __name__ == "__main__":
 
 	my_params = [
 		'gender', 
-		# 'weight_kg', 
+		'weight_kg', 
 		'diastolic', 
 		'grip_force', 
 		'sit_and_bend_forward_cm', 
-		'sit_up_count',
-		# 'bp_class',
-		'bmi'
+		'sit_up_count'
 	]
-	my_weights = np.array([-3.72967159,  5.92218948,  3.1171761 ,  6.59952667,  4.32016449, 2.76731788])
+	# my_weights = np.array([-3.72967159,  5.92218948,  3.1171761 ,  6.59952667,  4.32016449, 2.76731788])
+	my_weights = np.array([1.34873419, 1.54725775, 0.44241966, 3.20697321, 1.15853086, 0.67693897])
 
 	nb = NBClassifier()
 	nb.train(train_df, print_time=False)
 
 	# personal testing vs gradescope submission
 	if len(sys.argv) == 3:
-		nb.test(test_df, my_params, print_pred=True, report=False)
+		nb.test(test_df, my_params, my_weights, print_pred=True, report=False)
 	else:
-		nb.test(test_df, my_params, print_pred=False, report=True)
+		nb.test(test_df, my_params, my_weights, print_pred=False, report=True)
 
 	# top10 = test_df[:10]
 	# nb.test(top10, params, print_pred=True, report=False)

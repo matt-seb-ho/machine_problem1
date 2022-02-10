@@ -44,3 +44,26 @@ def experiment2(params):
 
 # experiment2()
 # exp2 results: ['gender', 'weight_kg', 'diastolic', 'grip_force', 'sit_and_bend_forward_cm', 'sit_up_count']
+remaining = ['age', 'height_cm', 'body_fat_pct', 'systolic', 'broad_jump_cm']
+
+def experiment3(tf, params, base_p, base_w):
+	top_score = 0
+	top_params = []
+
+	for i in range(2 **len(params)):
+		temp = num_to_params(i, params)
+		addlen = len(temp)
+		temp_p = base_p.copy()
+		temp_p.extend(temp)
+
+		weights = np.copy(base_w)
+		weights = np.pad(weights, pad_width=(0, addlen), constant_values=(1))
+		print(temp_p, '\n', weights)
+		score = nb.test(tf, temp_p, weights)
+		if score > top_score:
+			top_score = score
+			top_params = temp
+	 
+	print('--------\nThe Best:')
+	print(top_score)
+	print(top_params)

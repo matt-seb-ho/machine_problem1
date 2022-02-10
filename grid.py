@@ -105,4 +105,3 @@ def hybrid_search(
             weights += 2 * scale * (random_unit_vec(len(ps)))
     print(f'final score: {score}')
     np.save(save_file + ".npy", weights)
-                
