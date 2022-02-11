@@ -31,13 +31,16 @@ if __name__ == "__main__":
 	my_params = [
 		'gender', 
 		'weight_kg', 
-		'diastolic', 
+		# 'diastolic', 
 		'grip_force', 
 		'sit_and_bend_forward_cm', 
-		'sit_up_count'
+		'sit_up_count',
+		'bp_class'
 	]
 	# my_weights = np.array([-3.72967159,  5.92218948,  3.1171761 ,  6.59952667,  4.32016449, 2.76731788])
-	my_weights = np.array([1.34873419, 1.54725775, 0.44241966, 3.20697321, 1.15853086, 0.67693897])
+	# my_weights = np.array([1.34873419, 1.54725775, 0.44241966, 3.20697321, 1.15853086, 0.67693897])
+	# my_weights = np.array([ 0.48216685,  2.75703634,  4.44995824,  2.14060098,  1.10814467, -1.19870044])
+	my_weights = np.ones(len(my_params))
 
 	nb = NBClassifier()
 	nb.train(train_df, print_time=False)
