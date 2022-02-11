@@ -28,9 +28,23 @@ def add_bp_class(df):
 def add_bmi(df):
 	df['bmi'] = 10000 * df['weight_kg'] / (np.square(df['height_cm']))
 
+def classify_bmi(row):
+	bmi = row['bmi']
+	if bmi < 18.5:
+		return 'under'
+	elif bmi < 25:
+		return 'normal'
+	elif bmi < 30:
+		return 'over'
+	return 'obese'
+
+def add_bmi_class(df):
+	df['bmi_class'] = df.apply(classify_bmi, axis=1)
+
 if __name__ == "__main__":
 	if len(sys.argv) < 3:
-		sys.exit('please supply 2 command line arguments: [train filename] [test filename]')
+		# sys.exit('please supply 2 command line arguments: [train filename] [test filename]')
+		pass
 
 	train_fname = sys.argv[1]
 	test_fname = sys.argv[2]

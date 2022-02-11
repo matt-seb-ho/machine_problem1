@@ -54,5 +54,5 @@ def mcmc(nb, df, num_steps, step_size, params, weights=None, filestem="weights/w
 
 	print(best_score)
 	print(best_weights)
-	np.save(f'{filestem}_best.npy', best_weights)
+	np.save(f'{filestem}.npy', best_weights)
 	return best_score, best_weights

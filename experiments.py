@@ -29,10 +29,10 @@ def num_to_params(n, params):
 	return res
 
 # exhaustive search: test all possible combination of parameters
-def experiment2(params):
+def experiment2(params, test_df):
 	top_score = 0
 	top_params = []
-	for i in range(1, 2 ** len(params)):
+	for i in tqdm(range(1, 2 ** len(params))):
 		temp = num_to_params(i, params)
 		score = nb.test(test_df, temp, report=False)
 		if score > top_score:
