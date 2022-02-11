@@ -1,22 +1,8 @@
+import numpy as np
 from tqdm import tqdm
-# age, gender, height_cm, weight_kg, body fat_%, diastolic, systolic, grip_force, sit_and_bend_forward_cm, sit_up_count, broad_jump_cm
 
-# experiment 1: try dropping single parameters
-def experiment1():
-	top_score = 0
-	top_params = []
-	for param in params:
-		temp = params.copy()
-		temp.remove(param)
-		score = nb.test(test_df, temp)
-		if score > top_score:
-			top_score = score
-			top_params = temp
-	print('--------\nThe Best:')
-	print(top_score)
-	print(top_params)
-
-# experiment1()
+# base params:  age, gender, height_cm, weight_kg, body fat_%, diastolic, systolic, grip_force, sit_and_bend_forward_cm, sit_up_count, broad_jump_cm
+# custom params: bp_class, bmi, bmi_class
 
 def num_to_params(n, params):
 	res = []
@@ -29,15 +15,23 @@ def num_to_params(n, params):
 	return res
 
 # exhaustive search: test all possible combination of parameters
-def experiment2(params, test_df):
+def check_all(params, test_df, save_f):
 	top_score = 0
 	top_params = []
-	for i in tqdm(range(1, 2 ** len(params))):
+	num_setups = 2 ** len(params)
+	scores = np.zeros(num_setups)
+	for i in tqdm(range(1, num_setups)):
 		temp = num_to_params(i, params)
 		score = nb.test(test_df, temp, report=False)
+		scores[i] = score
 		if score > top_score:
 			top_score = score
 			top_params = temp
+
+	np.save(save_f + ".npy", scores)
+	with open(save_f + "_key.txt", "w") as f:
+		f.write(f'{save_f}.npy encoding is based on this param list: {str(params)}')
+	
 	print('--------\nThe Best:')
 	print(top_score)
 	print(top_params)
