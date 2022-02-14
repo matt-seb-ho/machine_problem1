@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from nb_classifier import *
 from custom_features import *
+from discretize import discretize
 
 header = [
 	'age', 'gender', 'height_cm', 'weight_kg', 
@@ -21,6 +22,23 @@ test_fname = 'test.txt'
 train_df = pd.read_csv(train_fname, names=header)
 test_df = pd.read_csv(test_fname, names=header)
 add_custom_features([train_df, test_df], all_params)
+
+
+myp = []
+make_discrete = True 
+
+if make_discrete:
+    c_to_d = [
+        'age', 'height_cm', 'weight_kg', 
+        'body_fat_pct', 'diastolic', 'systolic', 'grip_force', 
+        'sit_and_bend_forward_cm', 'sit_up_count', 'broad_jump_cm'
+    ]
+
+    for feature in c_to_d:
+        discretize(train_df, test_df, feature, split_depth=3)
+
+    myp = [x + '_d' for x in c_to_d]
+    myp.append('gender')
 
 nb = NBClassifier()
 nb.train(train_df, print_time=False)
