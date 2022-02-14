@@ -14,7 +14,9 @@ all_params = [
 	'body_fat_pct', 'diastolic', 'systolic', 'grip_force', 
 	'sit_and_bend_forward_cm', 'sit_up_count', 'broad_jump_cm'
 ]
-my_params = ['gender', 'weight_kg', 'diastolic', 'grip_force', 'sit_and_bend_forward_cm', 'sit_up_count']
+# my_params = ['gender', 'weight_kg', 'diastolic', 'grip_force', 'sit_and_bend_forward_cm', 'sit_up_count']
+my_params = ['gender', 'weight_kg', 'grip_force', 'sit_and_bend_forward_cm', 'sit_up_count', 'bp_class']
+wstart = np.load("weights/mc2p2_fin.npy")
 
 train_fname = 'train.txt'
 test_fname = 'test.txt'
