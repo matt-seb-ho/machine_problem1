@@ -37,11 +37,7 @@ class NBClassifier:
             print(f"trained classifier in {stop - start:0.3f} seconds")
 
     def normpdf(self, col, mean, std):
-        return (
-            np.exp(
-                -0.5 * (((col - mean) / std) ** 2)
-            ) / (std * root2pi)
-        )
+        return (np.exp(-0.5 * (((col - mean) / std) ** 2)) / (std * root2pi))
     
     def test(self, df, params, weights=None, print_pred=False, report=True):
         start = perf_counter()

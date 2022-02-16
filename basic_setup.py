@@ -27,7 +27,7 @@ add_custom_features([train_df, test_df], all_params)
 
 
 myp = []
-make_discrete = True 
+make_discrete = 0
 
 if make_discrete:
     c_to_d = [

@@ -9,6 +9,7 @@ def random_unit_vec(dim):
 print('def mcmc(nb, df, ps, ws, steps, step_size, save_f="weights/mc2_", '
       'save_every=1e10, decay_steps=50, decay_rate=.9):')
 
+# Monte Carlo Markov Chain: random walk for "learning" weights
 def mcmc(nb, df, ps, ws, steps, step_size, save_f="weights/mc2_", 
          save_every=1e10, decay_steps=50, decay_rate=.9):
     # initialization step
